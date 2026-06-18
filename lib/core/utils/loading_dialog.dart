@@ -26,7 +26,8 @@ void showCustomDialog({
               duration: Duration(milliseconds: 500),
               child: !isMeessageStage ?
               _buildLoginSuccessAnimation() 
-               : _buildWelcomeAnimation() ,);
+               : _buildWelcomeAnimation(),
+              );
           })
         ),
       );

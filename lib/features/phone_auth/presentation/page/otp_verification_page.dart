@@ -22,7 +22,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final TextEditingController _otpControler = TextEditingController();
   late final TapGestureRecognizer _tapRecognizer = TapGestureRecognizer();
 
-  String errorMessage = "";
+  String? errorMessage = "";
 
   @override
   void initState() {
@@ -32,12 +32,26 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       context.read<TimerCubit>().startTimer();
     });
 
-      _tapRecognizer.onTap = _handleResendOtp;
+    _tapRecognizer.onTap = _handleResendOtp;
 
-      
+    _otpControler.addListener(() {
+      if (errorMessage != null) {
+        setState(() {
+          errorMessage = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _otpControler.dispose();
+    _tapRecognizer.dispose();
+    super.dispose();
   }
 
   void _handleResendOtp() {
+    clearTextField();
     context.read<TimerCubit>().startTimer();
   }
 
@@ -83,32 +97,27 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
           SingleChildScrollView(
             child: SafeArea(
               child: Padding(
-                padding:EdgeInsets.symmetric(
-                  horizontal: 15.w,
-                  vertical: 50.h
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 50.h),
                 child: Column(
-                   mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                  
-              
                     CircularIconWrapper(iconName: 'sms icon.png'),
                     SizedBox(height: 20.h),
-              
+
                     Text(
                       "কোড দিন",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-              
+
                     SizedBox(height: 15.h),
-              
+
                     Text(
                       "$showNumber নম্বরে পাঠানো ৬-সংখ্যার কোড",
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
-              
+
                     SizedBox(height: 15.h),
-              
+
                     Pinput(
                       controller: _otpControler,
                       length: 6,
@@ -118,37 +127,40 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                       errorPinTheme: errorPinTheme,
                       validator: (value) => null,
                     ),
-              
+
                     SizedBox(height: 20.h),
-              
-                    BlocBuilder<TimerCubit, int>( // errror কেনো
+
+                    BlocBuilder<TimerCubit, int>(
                       builder: (context, second) {
                         return RichText(
                           text: TextSpan(
                             text: "কোড পাননি? ",
-                            style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.black,
+                            ),
                             children: <TextSpan>[
-                             second == 0 ? TextSpan(
-                                text: "আবার পাঠাও",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: AppColors.blueColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                recognizer: _tapRecognizer,
-                              ) :
-              
-                              TextSpan(
-                                text: "0.$second বাকি",
-                                style: TextStyle(fontSize: 14.sp),
-                              ),
+                              second == 0
+                                  ? TextSpan(
+                                      text: "আবার পাঠাও",
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: AppColors.blueColor,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      recognizer: _tapRecognizer,
+                                    )
+                                  : TextSpan(
+                                      text: "0.$second বাকি",
+                                      style: TextStyle(fontSize: 14.sp),
+                                    ),
                             ],
                           ),
                         );
                       },
                     ),
                     SizedBox(height: 20.h),
-              
+
                     SubmitButton(
                       text: "যাচাই করুন",
                       buttonOnTap: () {
@@ -168,38 +180,31 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     );
   }
 
+  
   bool _validatePinPut() {
     final String? message = Validatior.validPinPutCheck(
       value: _otpControler.text.trim(),
-      nullPinputError: "Please Enter OTP",
-      sixDigitError: "Please FilUp 6 Digit",
+      nullPinputError: "OTP দিন",
+      sixDigitError: "৬ সংখ্যার কোড দিন",
     );
 
     if (message != null) {
       setState(() {
-        errorMessage = message;
+        errorMessage = null;
       });
-     // return false;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            errorMessage = message;
+          });
+        }
+      });
+
+      return false;
     }
-    // Future.delayed(Duration(milliseconds: 800), () {
-    //   if (mounted) {
-    //     setState(() {
-    //       errorMessage = "";// ঠিক ভাবে খালি হচ্ছে 
-    //     });
-    //   }
-    //   //  return true;
-    // });
-    Future.microtask((){
-      setState(() {
-    errorMessage = message ?? "";
-    });
 
-     
-  });
-
-  return true;
-
-  //  return true;
+    return true;
   }
 
   void clearTextField() {
