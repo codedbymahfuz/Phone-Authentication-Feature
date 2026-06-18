@@ -24,7 +24,15 @@ class _AnimatedMessageState extends State<AnimatedMessage> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.message != null && widget.message!.isNotEmpty) {
-      _showSnackBar();
+
+       if(context.mounted) {
+          _showSnackBar();
+       }
+
+       if(widget.message == null || widget.message!.isEmpty) {
+         errorMessage = "";
+       }
+     
     }
   }
 
@@ -52,7 +60,7 @@ class _AnimatedMessageState extends State<AnimatedMessage> {
           : Material(
               elevation: 6,
               color: widget.color ?? Colors.red.shade600,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.sp),
               child: Padding(
                 padding:  EdgeInsets.symmetric(
                   horizontal: 15.w,
@@ -61,7 +69,8 @@ class _AnimatedMessageState extends State<AnimatedMessage> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                     Icon(Icons.error_outline, color: Colors.white, size: 14.sp,),
+                     Icon(Icons.error_outline, color: Colors.white, size: 17.sp,
+                     fontWeight: FontWeight.w500,),
                     SizedBox(width: 10.w),
                     Text(
                       errorMessage,
@@ -81,14 +90,14 @@ class _AnimatedMessageState extends State<AnimatedMessage> {
   void _showSnackBar() {
     _hideTimer?.cancel();
 
-   // if (widget.message != null) {
+   
       setState(() {
         _errorAlignment = const Alignment(0, 0.8);
         errorMessage = widget.message!;
       });
 
       _hideTimer = Timer(const Duration(seconds: 3), () {
-        if (context.mounted) {
+        if (mounted) {
           setState(() {   
         
             _errorAlignment = Alignment(0, 1.5);
@@ -97,4 +106,4 @@ class _AnimatedMessageState extends State<AnimatedMessage> {
       });
     
   }
-}
+} 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-import 'package:phone_auth/core/helper/helper_class.dart';
+import 'package:phone_auth/core/helper/phonecountrypicker.dart';
 import 'package:phone_auth/core/utils/animated_message.dart';
-import 'package:phone_auth/core/utils/media_query.dart';
+import 'package:phone_auth/core/utils/circle_avater_container.dart';
+import 'package:phone_auth/core/utils/submit_button.dart';
 import 'package:phone_auth/core/utils/validator.dart';
+import 'package:phone_auth/features/phone_auth/presentation/page/otp_verification_page.dart';
 
 
 class PhoneNumberPage extends StatefulWidget {
@@ -14,7 +16,7 @@ class PhoneNumberPage extends StatefulWidget {
 }
 
 class _PhoneNumberPageState extends State<PhoneNumberPage> {
-  bool _isPressed = false;
+ // bool _isPressed = true;
 
   final TextEditingController _phoneControler = TextEditingController();
 
@@ -30,54 +32,27 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.widthPercentage(context, 0.1),
-                  vertical: AppSizes.widthPercentage(context, 0.1),
+                  horizontal: 15.w,
+                  vertical: 10.h,
                 ),
                 child: Column(
                   children: [
-                  SizedBox(height: AppSizes.heightPercentage(context, 0.06)),
-                    Container(
-                      width: 100.w,
-                      height: 100.h,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFEEEDFE),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
+                  SizedBox(height: 30.h),
 
-                       
-                      child: Center(
-                        child: Image.asset(
-                          "lib/assets/images/mobileicon.png",
-                          height:  70.h,
-                          width: 70.w,
-                          fit: BoxFit.contain,
-                          //alignment: Alignment.center,
-                        ),
-                      ),
-                    ),
+                    CircularIconWrapper(iconName: "mobileicon.png"), // এটা তো ঠিক নামছে 
 
-                    SizedBox(height: AppSizes.heightPercentage(context, 0.02)),
+                    SizedBox(height: 20.h),
 
                      Text(
                       "ফোন নম্বর দিন",
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge
                     ),
 
                      SizedBox(height: 15.h),
 
                      Text(
-                      "আপনার নম্বরে একটি যাচাই কোড পাঠানো হবে",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      "আপনার নম্বরে একটি যাচাই কোড পাঠানো হবে", maxLines: 2,
+                      style: Theme.of(context).textTheme.titleSmall
                     ),
 
                     SizedBox(height: 40.h),
@@ -86,7 +61,23 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
 
                     SizedBox(height: 50.h),
 
-                    otpSendButton(),
+                    SubmitButton(text: 'কোড পাঠাও', buttonOnTap: 
+                       () {
+                       if(_validatePhoneNumber() == true) {
+                         
+                          Future.delayed(Duration(seconds: 5), () {
+
+                             Navigator.push(context, MaterialPageRoute(
+                      builder: (context)=> OtpVerificationPage(
+                        phoneNumber: _phoneControler.text.trim()
+                        )));
+
+                          });
+                       }
+
+                      
+
+                    },)
                   ],
                 ),
               ),
@@ -98,43 +89,17 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
     );
   }
 
-  GestureDetector otpSendButton() {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () {
-        _validatePhoneNumber();
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        height: AppSizes.heightPercentage(context, 0.07),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: _isPressed ? Color(0xFFF5F4ED) : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 1, color: Colors.grey),
-        ),
-        child: Center(
-          child: Text(
-            'কোড পাঠাও',
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _validatePhoneNumber() {
-    final String? message = Validatior.validNumber(
+   bool _validatePhoneNumber() {
+    final String? message = Validatior.validNumberCheck(
       value: _phoneControler.text.trim(),
-      nullNumber: "Phone Number is Required",
+      nullNumberError: "Phone Number is Required",
       validNumberError: "Please Valid Number",
     );
 
     if (message != null) {
       setState(() {
         errorMessage = message;
+        
       });
 
       
@@ -143,7 +108,9 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
           errorMessage = "";
         });
       });
+       return false;
     }
+     return true;
     
   }
 

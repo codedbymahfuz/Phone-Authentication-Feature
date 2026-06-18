@@ -1,6 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:phone_auth/core/constants/appcolors.dart';
 
 class PhoneCountryPicker extends StatefulWidget {
   final TextEditingController? controller;
@@ -27,13 +28,13 @@ class _PhoneCountryPickerState extends State<PhoneCountryPicker> {
   @override
   Widget build(BuildContext context) {
     return  Container(
-        height: 60.h,
+        height: 56.h,
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.whiteColur,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(width: 1, color: Colors.blueAccent),
+          border: Border.all(width: 1, color: AppColors.blueColor),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -58,7 +59,7 @@ class _PhoneCountryPickerState extends State<PhoneCountryPicker> {
             ),
             SizedBox(width: 12.w),
       
-            Container(width: 1, height: 40.h, color: Colors.grey),
+            Container(width: 1, height: 40.h, color: AppColors.greyColor),
              SizedBox(width: 12.w),
       
             Expanded(

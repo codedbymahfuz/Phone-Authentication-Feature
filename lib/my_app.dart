@@ -14,6 +14,20 @@ class MyApp extends StatelessWidget {
        builder: (context, child) {
          return MaterialApp(
       debugShowCheckedModeBanner: false,
+       theme: ThemeData(
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 18.sp, 
+            fontWeight: FontWeight.bold
+          ),
+           titleSmall: TextStyle(
+            fontSize: 14.sp,
+            overflow: TextOverflow.ellipsis,
+            
+           ),
+        ),
+         
+       ),
       home: PhoneNumberPage(),
     );
        },
