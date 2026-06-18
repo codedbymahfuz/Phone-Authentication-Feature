@@ -33,6 +33,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     });
 
       _tapRecognizer.onTap = _handleResendOtp;
+
+      
   }
 
   void _handleResendOtp() {

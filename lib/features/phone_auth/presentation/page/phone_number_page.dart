@@ -3,9 +3,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:phone_auth/core/helper/phonecountrypicker.dart';
 import 'package:phone_auth/core/utils/animated_message.dart';
 import 'package:phone_auth/core/utils/circle_avater_container.dart';
+import 'package:phone_auth/core/utils/loading_dialog.dart';
 import 'package:phone_auth/core/utils/submit_button.dart';
 import 'package:phone_auth/core/utils/validator.dart';
 import 'package:phone_auth/features/phone_auth/presentation/page/otp_verification_page.dart';
+
 
 
 class PhoneNumberPage extends StatefulWidget {
@@ -63,16 +65,18 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
 
                     SubmitButton(text: 'কোড পাঠাও', buttonOnTap: 
                        () {
-                       if(_validatePhoneNumber() == true) {
+                       if(_validatePhoneNumber()) {
                          
-                          Future.delayed(Duration(seconds: 5), () {
-
-                             Navigator.push(context, MaterialPageRoute(
-                      builder: (context)=> OtpVerificationPage(
-                        phoneNumber: _phoneControler.text.trim()
-                        )));
-
-                          });
+                         if(mounted) {
+                          circularCustomDialog(context);
+                         }
+                          
+                         Future.delayed(Duration(seconds: 3), () {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (_)=> OtpVerificationPage(
+                              phoneNumber: _phoneControler.text)));
+                         });
                        }
 
                       

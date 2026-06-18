@@ -19,9 +19,12 @@ class MyApp extends StatelessWidget {
            BlocProvider(create: (context)=> TimerCubit()),
           ],
            child: MaterialApp(
-      debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
+          
        theme: ThemeData(
+        useMaterial3: true,
         textTheme: TextTheme(
+          
           titleLarge: TextStyle(
             fontSize: 18.sp, 
             fontWeight: FontWeight.bold
