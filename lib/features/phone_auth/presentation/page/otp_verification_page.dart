@@ -32,12 +32,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       context.read<TimerCubit>().startTimer();
     });
 
-    //  _tapRecognizer.onTap = _handleResendOtp;
+      _tapRecognizer.onTap = _handleResendOtp;
   }
 
-  // void _handleResendOtp() {
-  //   context.read<TimerCubit>().startTimer();
-  // }
+  void _handleResendOtp() {
+    context.read<TimerCubit>().startTimer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,32 +119,32 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               
                     SizedBox(height: 20.h),
               
-                    // BlocBuilder<TimerCubit, int>( // errror কেনো
-                    //   builder: (context, second) {
-                    //     return RichText(
-                    //       text: TextSpan(
-                    //         text: "কোড পাননি? ",
-                    //         style: TextStyle(fontSize: 14.sp, color: Colors.black),
-                    //         children: <TextSpan>[
-                    //          second == 0 ? TextSpan(
-                    //             text: "আবার পাঠাও",
-                    //             style: TextStyle(
-                    //               fontSize: 14.sp,
-                    //               color: AppColors.blueColor,
-                    //               fontWeight: FontWeight.w500,
-                    //             ),
-                    //             recognizer: _tapRecognizer,
-                    //           ) :
+                    BlocBuilder<TimerCubit, int>( // errror কেনো
+                      builder: (context, second) {
+                        return RichText(
+                          text: TextSpan(
+                            text: "কোড পাননি? ",
+                            style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                            children: <TextSpan>[
+                             second == 0 ? TextSpan(
+                                text: "আবার পাঠাও",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: AppColors.blueColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                recognizer: _tapRecognizer,
+                              ) :
               
-                    //           TextSpan(
-                    //             text: " ০.$second বাকি",
-                    //             style: TextStyle(fontSize: 14.sp),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
+                              TextSpan(
+                                text: "0.$second বাকি",
+                                style: TextStyle(fontSize: 14.sp),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 20.h),
               
                     SubmitButton(
